@@ -18,7 +18,9 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+
+
+import java.io.IOException;
 
 public class CameraActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2{
     private static final String TAG="MainActivity";
@@ -112,12 +114,20 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
 
-        Mat edges = new Mat();
-        //take input image 8bit and output edges in 8 bit by declare threshold 1 and 2
+        Mat moutput = new Mat();
+        ObectDetectionClass obectDetectionClass = null;
+        //take input (mRgba)image 8bit format RGBA and convert output (moutput) in 8 bit but we want it in ByteBuffer to pass it to the model
+        try {
+            // input Size 300 for this model
+            obectDetectionClass = new ObectDetectionClass(300,getAssets(),"ssd_mobilenet.tflite","labelmap.txt");
+            Log.d("MainActivity","Model is Successfully loaded");
+        }catch (IOException e){
+            Log.d("MainActivity","Model is Failed to load");
+            e.printStackTrace();
+        }
+        moutput=obectDetectionClass.recongizeImage(mRgba);
 
-        Imgproc.Canny(mRgba,edges,125,255);
-
-        return edges;
+        return moutput;
 
     }
 

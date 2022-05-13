@@ -30,14 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            // input Size 300 for this model
-            obectDetectionClass = new ObectDetectionClass(300,getAssets(),"ssd_mobilenet.tflite","labelmap.txt");
-            Log.d("MainActivity","Model is Successfully loaded");
-        }catch (IOException e){
-            Log.d("MainActivity","Model is Failed to load");
-            e.printStackTrace();
-        }
     }
     public void onClickCamera(View v) {
         Intent i = new Intent(MainActivity.this, com.example.Real_time_Object_Detection.CameraActivity.class);
